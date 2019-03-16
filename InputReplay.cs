@@ -40,24 +40,24 @@ public class InputReplay : MonoBehaviour {
 
 	// private types
 	[Serializable]
-	private struct InputSequence
+	private struct InputSequence		// var names are reduced for smaller json
 	{
-		public float time;
-		public List<KeyCode> getKey;
-		public List<KeyCode> getKeyDown;
-		public List<KeyCode> getKeyUp;
-		public Vector3 mousePosition;
-		public Vector3 mouseWorldPosition;
-		public Vector2 mouseScrollDelta;
+		public float t;			// time
+		public List<KeyCode> gK;	// getKey
+		public List<KeyCode> gKD;	// getKeyDown
+		public List<KeyCode> gKU;	// getKeyUp
+		public Vector3 mP;		// mousePosition
+		public Vector3 mWP;		// mouseWorldPosition
+		public Vector2 mSD;		// mouseScrollDelta
 
 		public void init()
 		{
-			getKey = new List<KeyCode> ();
-			getKeyDown = new List<KeyCode> ();
-			getKeyUp = new List<KeyCode> ();
-			mousePosition = new Vector3 ();
-			mouseWorldPosition = new Vector3 ();
-			mouseScrollDelta = new Vector2 ();
+			gK = new List<KeyCode> ();
+			gKD = new List<KeyCode> ();
+			gKU = new List<KeyCode> ();
+			mP = new Vector3 ();
+			mWP = new Vector3 ();
+			mSD = new Vector2 ();
 		}
 	};
 
@@ -220,9 +220,9 @@ public class InputReplay : MonoBehaviour {
 		GetMouseButtonDown = _GetMouseButtonDown;
 		GetMouseButtonUp = _GetMouseButtonUp;
 
-		_mousePosition = delegate { return currentSequence.mousePosition; };
-		_mouseWorldPosition = delegate { return currentSequence.mouseWorldPosition; };
-		_mouseScrollDelta = delegate { return currentSequence.mouseScrollDelta; };
+		_mousePosition = delegate { return currentSequence.mP; };
+		_mouseWorldPosition = delegate { return currentSequence.mWP; };
+		_mouseScrollDelta = delegate { return currentSequence.mSD; };
 	}
 
 	private void pause(float time)
@@ -235,23 +235,23 @@ public class InputReplay : MonoBehaviour {
 	private void Record(float time)
 	{
 		currentSequence.init ();
-		currentSequence.time = time;
+		currentSequence.t = time;
 
 		foreach (KeyCode vkey in System.Enum.GetValues(typeof(KeyCode)))
 		{
 			if (Input.GetKey (vkey))
-				currentSequence.getKey.Add (vkey);
+				currentSequence.gK.Add (vkey);
 			if (Input.GetKeyDown (vkey))
-				currentSequence.getKeyDown.Add (vkey);
+				currentSequence.gKD.Add (vkey);
 			if (Input.GetKeyUp (vkey))
-				currentSequence.getKeyUp.Add (vkey);
+				currentSequence.gKU.Add (vkey);
 		}
 
-		currentSequence.mousePosition = Input.mousePosition;
+		currentSequence.mP = Input.mousePosition;
 
-		currentSequence.mouseWorldPosition = Camera.main.ScreenToWorldPoint (currentSequence.mousePosition);
+		currentSequence.mWP = Camera.main.ScreenToWorldPoint (currentSequence.mP);
 
-		currentSequence.mouseScrollDelta = Input.mouseScrollDelta;
+		currentSequence.mSD = Input.mouseScrollDelta;
 
 		// if nothing new, we dont write anything
 		if (AnyChange(oldSequence, currentSequence))
@@ -264,10 +264,10 @@ public class InputReplay : MonoBehaviour {
 
 	private bool AnyChange(InputSequence seqA, InputSequence seqB)
 	{
-		if(!Enumerable.SequenceEqual(seqA.getKey, seqB.getKey)) return true;
-		else if (seqA.mousePosition != seqB.mousePosition) return true;
-		else if (seqA.mouseWorldPosition != seqB.mouseWorldPosition) return true;
-		else if (seqA.mouseScrollDelta != seqB.mouseScrollDelta) return true;
+		if(!Enumerable.SequenceEqual(seqA.gK, seqB.gK)) return true;
+		else if (seqA.mP != seqB.mP) return true;
+		else if (seqA.mWP != seqB.mWP) return true;
+		else if (seqA.mSD != seqB.mSD) return true;
 		else return false;
 	}
 
@@ -275,11 +275,11 @@ public class InputReplay : MonoBehaviour {
 	 * */
 	private void Play(float time)
 	{
-		if (time >= nextSequence.time)
+		if (time >= nextSequence.t)
 		{
 			oldSequence = currentSequence;
 			currentSequence = nextSequence;
-			Debug.Log (time);
+			//Debug.Log (time);
 
 			nextSequence.init ();
 			if (!ReadLine ())
@@ -314,12 +314,12 @@ public class InputReplay : MonoBehaviour {
 	/*
 	 * PRIVATE FAKE INPUT
 	 * */
-	private bool _GetKey(KeyCode code) { return GetKeyCodeInList (code, currentSequence.getKey); }
-	private bool _GetKeyDown(KeyCode code) { return GetKeyCodeInList (code, currentSequence.getKeyDown); }
-	private bool _GetKeyUp(KeyCode code) { return GetKeyCodeInList (code, currentSequence.getKeyUp); }
-	private bool _GetMouseButton(int button) { return GetKeyCodeInList (KeyCode.Mouse0+button, currentSequence.getKey); }
-	private bool _GetMouseButtonDown(int button) { return GetKeyCodeInList (KeyCode.Mouse0+button, currentSequence.getKeyDown); }
-	private bool _GetMouseButtonUp(int button) { return GetKeyCodeInList (KeyCode.Mouse0+button, currentSequence.getKeyUp); }
+	private bool _GetKey(KeyCode code) { return GetKeyCodeInList (code, currentSequence.gK); }
+	private bool _GetKeyDown(KeyCode code) { return GetKeyCodeInList (code, currentSequence.gKD); }
+	private bool _GetKeyUp(KeyCode code) { return GetKeyCodeInList (code, currentSequence.gKU); }
+	private bool _GetMouseButton(int button) { return GetKeyCodeInList (KeyCode.Mouse0+button, currentSequence.gK); }
+	private bool _GetMouseButtonDown(int button) { return GetKeyCodeInList (KeyCode.Mouse0+button, currentSequence.gKD); }
+	private bool _GetMouseButtonUp(int button) { return GetKeyCodeInList (KeyCode.Mouse0+button, currentSequence.gKU); }
 	/* in case of removed up and down lists, compare old and current sequence
 	public bool GetKeyDown(KeyCode code) { return !GetKeyCodeInList (code, oldSequence.getKey) & GetKeyCodeInList (code, currentSequence.getKey); }
 	public bool GetKeyUp(KeyCode code) { return GetKeyCodeInList (code, oldSequence.getKey) & !GetKeyCodeInList (code, currentSequence.getKey); }
