@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>InputReplay - Documentation</title>
+    <meta name="description" content="Free responsive HTML template for your documentation">
+    <meta name="author" content="valthemes.com">
+    <meta name="format-detection" content="telephone=no">
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" type="text/css" href="css/prettify.css">
+	<link rel="stylesheet" type="text/css" href="css/normalize.css" >
+	<style type="text/css">
+		h5 {
+			color:rgb(34, 167, 240);
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-2 col-xs-12 left">
+					<div id="logo">
+					</div>
+				</div>
+				<div class="col-lg-8 col-md-7 col-xs-12">
+					<div class="slogan">
+						InputReplay | <small>basic Input record and playback for unity3D software in C#</small>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-3 col-xs-12 right">
+					<a class="btn" href="https://github.com/lemoissonneur/InputReplay">download now</a>
+				</div>
+			</div>
+		</div>
+	</header>
+	<section class="content">
+		<div class="container">
+			<div class="content-wrap">
+				<div class="row">
+					<aside>
+						<div class="menu-box">
+							<h4>Navigation</h4>	
+							<nav>
+								<ul>
+									<li><a href="#description" class="current">Description</a></li>
+									<li><a href="#features">Features</a></li>
+									<li><a href="#references">References</a>
+										<ul>
+											<li><a href="#references_properties"><small>&nbsp; &nbsp; &nbsp; &nbsp; Properties</small></a></li>
+											<li><a href="#references_methods"><small>&nbsp; &nbsp; &nbsp; &nbsp; Methods</small></a></li>
+											<li><a href="#references_configuration_properties"><small>&nbsp; &nbsp; &nbsp; &nbsp; Configuration Properties</small></a></li>
+											<li><a href="#references_types"><small>&nbsp; &nbsp; &nbsp; &nbsp; Types</small></a></li>
+										</ul>
+									</li>
+									<li><a href="#examples">Examples</a>
+										<ul>
+											<li><a href="#examples_record"><small>&nbsp; &nbsp; &nbsp; &nbsp; Record and play</small></a></li>
+											<li><a href="#examples_manual"><small>&nbsp; &nbsp; &nbsp; &nbsp; Manual control</small></a></li>
+										</ul>
+									</li>
+									<li><a href="#credit">Credits</a></li>
+								</ul>					
+							</nav>
+						</div>
+					</aside>
+					<div class="content-info">
+						<div class="section-txt" id="description">
+							<h3>Description</h3>
+							<p>InputReplay provide a very basic class to record </p>
+						</div>
+						<div class="section-txt" id="features">
+							<h3>Features</h3>
+							<ul>
+								<li>Record all keyboard keys, mouse bouttons, mouse position, mouse world position and mouse scroll delta</li>
+								<li>Can work in both <i>Update()</i> and <i>FixedUpdate()</i> cycles</li>
+								<li>Data is saved in Json file</li>
+								<li>Ingame time based</li>
+								<li>Playback delay <3ms</li>
+								<li>Can start automatically or manually</li>
+								<li>Will act as a broker for <i>UnityEngine.Input</i> when in record mode or disabled</li>
+							</ul>
+						</div>
+						<div class="section-txt" id="references">
+							<h3>references</h3>
+							<table>
+								<tr>
+									<th colspan="2" style="text-align:left;"><h5 id="references_properties">Properties</h5></th>
+								</tr>
+								<tr style="background-color:rgb(245, 245, 245);">
+									<td><pre class="prettyprint">Vector3 mousePosition { get; }</pre></td>
+									<td>The current mouse position in pixel coordinates. (Read Only)</td>
+								</tr>
+								<tr style="background-color:rgb(255, 255, 255);">
+									<td><pre class="prettyprint_alt">Vector3 mouseWorldPosition { get; }</pre></td>
+									<td>result of <small>Camera.main.ScreenToWorldPoint (Input.mousePosition);</small></td>
+								</tr>
+								<tr style="background-color:rgb(245, 245, 245);">
+									<td><pre class="prettyprint">Vector2 mouseScrollDelta { get; }</pre></td>
+									<td>The current mouse scroll delta. (Read Only)</td>
+								</tr>
+								<tr style="background-color:rgb(255, 255, 255);">
+									<td><pre class="prettyprint_alt">bool anyKey { get; }</pre></td>
+									<td>Is any key or mouse button currently held down? (Read Only)</td>
+								</tr>
+								<tr style="background-color:rgb(245, 245, 245);">
+									<td><pre class="prettyprint">bool anyKeyDown { get; }</pre></td>
+									<td>Returns true the first frame the user hits any key or mouse button. (Read Only)</td>
+								</tr>
+								<tr>
+									<th colspan="2" style="text-align:left;"><h5 id="references_methods"></br>Methods</h5></th>
+								</tr>
+								<tr style="background-color:rgb(245, 245, 245);">
+									<td><pre class="prettyprint">bool GetKey(KeyCode code)</pre></td>
+									<td>Returns true while the user holds down the key identified by name.</td>
+								</tr>
+								<tr style="background-color:rgb(255, 255, 255);">
+									<td><pre class="prettyprint_alt">bool GetKeyDown(KeyCode code)</pre></td>
+									<td>Returns true during the frame the user starts pressing down the key identified by name.</td>
+								</tr>
+								<tr style="background-color:rgb(245, 245, 245);">
+									<td><pre class="prettyprint">bool GetKeyUp(KeyCode code)</pre></td>
+									<td>Returns true during the frame the user releases the key identified by name.</td>
+								</tr>
+								<tr style="background-color:rgb(255, 255, 255);">
+									<td><pre class="prettyprint_alt">bool GetMouseButton(int button)</pre></td>
+									<td>Returns whether the given mouse button is held down.</td>
+								</tr>
+								<tr style="background-color:rgb(245, 245, 245);">
+									<td><pre class="prettyprint">bool GetMouseButtonDown(int button)</pre></td>
+									<td>Returns true during the frame the user pressed the given mouse button.</td>
+								</tr>
+								<tr style="background-color:rgb(255, 255, 255);">
+									<td><pre class="prettyprint_alt">bool GetMouseButtonUp(int button)</pre></td>
+									<td>Returns true during the frame the user releases the given mouse button.</td>
+								</tr>
+								<tr style="background-color:rgb(245, 245, 245);">
+									<td><pre class="prettyprint">void StartRecord()</pre></td>
+									<td>Start Recording Input (the time used will be relative to the start time).</td>
+								</tr>
+								<tr style="background-color:rgb(255, 255, 255);">
+									<td><pre class="prettyprint_alt">void StartPlayBack()</pre></td>
+									<td>Start Input Playback (the time used will be relative to the start time).</td>
+								</tr>
+								<tr style="background-color:rgb(245, 245, 245);">
+									<td><pre class="prettyprint">void Stop()</pre></td>
+									<td>Stop the recording or playback and close streams.</td>
+								</tr>
+								<tr>
+									<th colspan="2" style="text-align:left;"><h5 id="references_configuration_properties" ></br>Configuration Properties</h5></th>
+								</tr>
+								<tr style="background-color:rgb(245, 245, 245);">
+									<td><pre class="prettyprint">bool active</pre></td>
+									<td>true when recording or playing or ready and waiting for manual start (default: false).</td>
+								</tr>
+								<tr style="background-color:rgb(255, 255, 255);">
+									<td><pre class="prettyprint_alt">Mode mode</pre></td>
+									<td>Selected operation mode (default: Record).</td>
+								</tr>
+								<tr style="background-color:rgb(245, 245, 245);">
+									<td><pre class="prettyprint">UpdateFunction UpdateCycle</pre></td>
+									<td>Selected cycle to record or play input (default: Update).</td>
+								</tr>
+								<tr style="background-color:rgb(255, 255, 255);">
+									<td><pre class="prettyprint_alt">string FilePath</pre></td>
+									<td>Json file path to write or read (default: <small>"Temp/input.json"</small>).</td>
+								</tr>
+								<tr style="background-color:rgb(245, 245, 245);">
+									<td><pre class="prettyprint">bool manualStart</pre></td>
+									<td>if true, wait for <small>StartRecord()</small> or <small>StartPlayBack()</small> to start operation (default: false).</td>
+								</tr>
+								<tr>
+									<th colspan="2" style="text-align:left;"><h5 id="references_types"></br>Types</h5></th>
+								</tr>
+								<tr style="background-color:rgb(245, 245, 245);">
+									<td><pre class="prettyprint">enum Mode {Record, PlayBack}</pre></td>
+									<td>Operation modes.</td>
+								</tr>
+								<tr style="background-color:rgb(255, 255, 255);">
+									<td><pre class="prettyprint_alt">enum UpdateFunction {FixedUpdate, Update, Both}</pre></td>
+									<td>Record/Playback cycles.</td>
+								</tr>
+							</table>
+						</div>
+						<div class="section-txt" id="examples">
+							<h3>Examples</h3>
+							<div class="section-txt" id="examples_record">
+								<h5>Record and playback example</h5>
+								<p>Put the <i>InputReplay.cs</i> script in an empty gameobject or in your character and set it up for record mode.</p>
+								<img src="images/InputReplay_param_github.PNG">
+								<p>read from <i>InputReplay</i> just like you would read from <i>UnityEngine.Input</i> it provide the same methods/properties and will redirect <i>UnityEngine.Input</i>'s result in record mode.</p>
+								<pre class="prettyprint">public class Test1 : MonoBehaviour {
+
+	InputReplay myInput;
+	// Use this for initialization
+	void Start () {
+		myInput = GameObject.Find ("GameObject").GetComponent<InputReplay> ();
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		if(myInput.GetKey (KeyCode.A))
+			Debug.Log('A');
+		
+	}
+}</pre>
+								<p>Json result</p>
+								<pre class="prettyprint">{"t":0.0,"gK":[],"gKD":[],"gKU":[],"mP":{"x":-286.5,"y":530.5,"z":0.0},"mWP":{"x":-6.516666889190674,"y":0.8944445848464966,"z":-10.0},"mSD":{"x":0.0,"y":0.0}}
+{"t":1.1818948984146119,"gK":[102],"gKD":[102],"gKU":[],"mP":{"x":-286.5,"y":530.5,"z":0.0},"mWP":{"x":-6.516666889190674,"y":0.8944445848464966,"z":-10.0},"mSD":{"x":0.0,"y":0.0}}
+{"t":1.281068205833435,"gK":[102,104],"gKD":[104],"gKU":[],"mP":{"x":-286.5,"y":530.5,"z":0.0},"mWP":{"x":-6.516666889190674,"y":0.8944445848464966,"z":-10.0},"mSD":{"x":0.0,"y":0.0}}
+{"t":1.3142009973526,"gK":[100,102,104],"gKD":[100],"gKU":[],"mP":{"x":-286.5,"y":530.5,"z":0.0},"mWP":{"x":-6.516666889190674,"y":0.8944445848464966,"z":-10.0},"mSD":{"x":0.0,"y":0.0}}
+...</pre>
+								<p>if you want to replay the inputs, just switch the mode to PlayBack. You dont need to change your code as long as you use <i>InputReplay</i> instead of <i>UnityEngine.Input</i>.</p>
+								<img src="images/play.PNG">
+							</div>
+							<div class="section-txt" id="examples_manual">
+								<h5>Manual start</h5>
+								<p>in the previous example the record and playback start automatically at game start. But if you want you can control when to start recording and playing. Here is an example of a 10 seconds record starting 2 seconds after the game start.</p>
+								<img src="images/manual.PNG">
+								<pre class="prettyprint">public class Test1 : MonoBehaviour {
+
+	InputReplay myInput;
+	bool recordStarted = false;
+	// Use this for initialization
+	void Start () {
+		myInput = GameObject.Find ("InputReplay").GetComponent<InputReplay> ();
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		if(myInput.GetKey (KeyCode.A))
+			Debug.Log('A');
+
+		if (Time.time >= 2 && !recordStarted) {
+			myInput.StartRecord ();
+			recordStarted = true;
+		}
+
+		if (Time.time >= 12 && recordStarted) {
+			myInput.Stop ();
+			recordStarted = false;
+		}
+		
+	}
+}</pre>
+							</div>
+
+						</div>
+						<div class="section-txt" id="credit">
+							<h3>Credits</h3>
+							<ul>
+								<li>Made by <a href="https://github.com/lemoissonneur/">lemoissonneur</a></li>
+								<li>Documentation template from <a href="https://www.behance.net/valthemes"><i>Val Themes</i></a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<div class="footer-area">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 center">
+					This template presents by <a href="http://dev.valthemes.com" target="_blank">valthemes.com</a>. This product was created as free.<br>You can use this as you like in noncommercial purposes. 
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 center">
+					Developed by valthemes.com © 2016. All rights reserved.
+				</div>
+			</div>
+		</div>
+	</footer>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/prettify.min.js"></script>
+	<script src="js/scripts.min.js"></script>
+</body>
+</html>
