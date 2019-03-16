@@ -17,14 +17,14 @@ public class InputReplay : MonoBehaviour {
 	public delegate Vector3 Vector3Type();
 	public delegate Vector2 Vector2Type();
 
-	// public Fields for Management via Editor
+	// public properties for Management via Editor UI
 	public bool active = false;
 	public Mode mode = Mode.Record;
 	public UpdateFunction UpdateCycle = UpdateFunction.Update;
 	public string FilePath = "Temp/input.json";
 	public bool manualStart = false;
 
-	// public delegates for input access
+	// public methods and properties for input access
 	public GetKeyType GetKey;
 	public GetKeyType GetKeyDown;
 	public GetKeyType GetKeyUp;
@@ -67,16 +67,20 @@ public class InputReplay : MonoBehaviour {
 		}
 	};
 
-	// private
+	// Streams
 	private StreamReader inputPlaybackStream;
 	private StreamWriter inputRecordStream;
 
+	// Input sequences
 	private InputSequence oldSequence;
 	private InputSequence currentSequence;
 	private InputSequence nextSequence;
 
+	// delegate to switch from record to play activity
 	private delegate void Work(float time);
 	private Work work;
+
+	// start time of the record or playback
 	private float startTime = 0.0f;
 
 
@@ -176,6 +180,7 @@ public class InputReplay : MonoBehaviour {
 			inputPlaybackStream.Close ();
 			break;
 		}
+
 		work = pause;
 	}
 
@@ -203,7 +208,7 @@ public class InputReplay : MonoBehaviour {
 			startTime = Time.time;
 	}
 
-	private void SetInputStd()
+	private void SetInputStd()	// redirect public methods and properties to actual UnityEngine.Input
 	{
 		GetKey = Input.GetKey;
 		GetKeyDown = Input.GetKeyDown;
@@ -220,14 +225,14 @@ public class InputReplay : MonoBehaviour {
 		_anyKeyDown = delegate { return Input.anyKeyDown; };
 	}
 
-	private void SetInputFake()
+	private void SetInputFake()	// redirect public methods and properties to our replay system
 	{
-		GetKey = _GetKey;
-		GetKeyDown = _GetKeyDown;
-		GetKeyUp = _GetKeyUp;
-		GetMouseButton = _GetMouseButton;
-		GetMouseButtonDown = _GetMouseButtonDown;
-		GetMouseButtonUp = _GetMouseButtonUp;
+		GetKey = FakeGetKey;
+		GetKeyDown = FakeGetKeyDown;
+		GetKeyUp = FakeGetKeyUp;
+		GetMouseButton = FakeGetMouseButton;
+		GetMouseButtonDown = FakeGetMouseButtonDown;
+		GetMouseButtonUp = FakeGetMouseButtonUp;
 
 		_mousePosition = delegate { return currentSequence.mP; };
 		_mouseWorldPosition = delegate { return currentSequence.mWP; };
@@ -326,16 +331,16 @@ public class InputReplay : MonoBehaviour {
 	/*
 	 * PRIVATE FAKE INPUT
 	 * */
-	private bool _GetKey(KeyCode code) { return GetKeyCodeInList (code, currentSequence.gK); }
-	private bool _GetKeyDown(KeyCode code) { return GetKeyCodeInList (code, currentSequence.gKD); }
-	private bool _GetKeyUp(KeyCode code) { return GetKeyCodeInList (code, currentSequence.gKU); }
-	private bool _GetMouseButton(int button) { return GetKeyCodeInList (KeyCode.Mouse0+button, currentSequence.gK); }
-	private bool _GetMouseButtonDown(int button) { return GetKeyCodeInList (KeyCode.Mouse0+button, currentSequence.gKD); }
-	private bool _GetMouseButtonUp(int button) { return GetKeyCodeInList (KeyCode.Mouse0+button, currentSequence.gKU); }
+	private bool FakeGetKey(KeyCode code) { return GetKeyCodeInList (code, currentSequence.gK); }
+	private bool FakeGetKeyDown(KeyCode code) { return GetKeyCodeInList (code, currentSequence.gKD); }
+	private bool FakeGetKeyUp(KeyCode code) { return GetKeyCodeInList (code, currentSequence.gKU); }
+	private bool FakeGetMouseButton(int button) { return GetKeyCodeInList (KeyCode.Mouse0+button, currentSequence.gK); }
+	private bool FakeGetMouseButtonDown(int button) { return GetKeyCodeInList (KeyCode.Mouse0+button, currentSequence.gKD); }
+	private bool FakeGetMouseButtonUp(int button) { return GetKeyCodeInList (KeyCode.Mouse0+button, currentSequence.gKU); }
 	/* in case of removed up and down lists, compare old and current sequence
-	public bool GetKeyDown(KeyCode code) { return !GetKeyCodeInList (code, oldSequence.getKey) & GetKeyCodeInList (code, currentSequence.getKey); }
-	public bool GetKeyUp(KeyCode code) { return GetKeyCodeInList (code, oldSequence.getKey) & !GetKeyCodeInList (code, currentSequence.getKey); }
-	public bool GetMouseButtonDown(int button) { return !GetKeyCodeInList (KeyCode.Mouse0+button, oldSequence.getKey) & GetKeyCodeInList (KeyCode.Mouse0+button, currentSequence.getKey); }
-	public bool GetMouseButtonUp(int button) { return GetKeyCodeInList (KeyCode.Mouse0+button, oldSequence.getKey) & !GetKeyCodeInList (KeyCode.Mouse0+button, currentSequence.getKey); }
+	public bool FakeGetKeyDown(KeyCode code) { return !GetKeyCodeInList (code, oldSequence.getKey) & GetKeyCodeInList (code, currentSequence.getKey); }
+	public bool FakeGetKeyUp(KeyCode code) { return GetKeyCodeInList (code, oldSequence.getKey) & !GetKeyCodeInList (code, currentSequence.getKey); }
+	public bool FakeGetMouseButtonDown(int button) { return !GetKeyCodeInList (KeyCode.Mouse0+button, oldSequence.getKey) & GetKeyCodeInList (KeyCode.Mouse0+button, currentSequence.getKey); }
+	public bool FakeGetMouseButtonUp(int button) { return GetKeyCodeInList (KeyCode.Mouse0+button, oldSequence.getKey) & !GetKeyCodeInList (KeyCode.Mouse0+button, currentSequence.getKey); }
 	*/
 }
