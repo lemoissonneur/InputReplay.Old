@@ -11,6 +11,7 @@ public class InputReplay : MonoBehaviour {
 	public enum Mode {Record, PlayBack};
 	public enum UpdateFunction {FixedUpdate, Update, Both};
 	// public types for delegates
+	public delegate bool AnyKeyType();
 	public delegate bool GetKeyType(KeyCode code);
 	public delegate bool GetMouseButtonType(int button);
 	public delegate Vector3 Vector3Type();
@@ -23,7 +24,7 @@ public class InputReplay : MonoBehaviour {
 	public string FilePath = "Temp/input.json";
 	public bool manualStart = false;
 
-	// public delegates for input
+	// public delegates for input access
 	public GetKeyType GetKey;
 	public GetKeyType GetKeyDown;
 	public GetKeyType GetKeyUp;
@@ -37,6 +38,11 @@ public class InputReplay : MonoBehaviour {
 	public Vector3 mousePosition { get { return _mousePosition(); } }
 	public Vector3 mouseWorldPosition { get { return _mouseWorldPosition(); } }
 	public Vector2 mouseScrollDelta { get { return _mouseScrollDelta(); } }
+
+	private AnyKeyType _anyKey;
+	private AnyKeyType _anyKeyDown;
+	public bool anyKey { get { return _anyKey (); } }
+	public bool anyKeyDown { get { return _anyKeyDown (); } }
 
 	// private types
 	[Serializable]
@@ -209,6 +215,9 @@ public class InputReplay : MonoBehaviour {
 		_mousePosition = delegate { return Input.mousePosition; };
 		_mouseWorldPosition = delegate { return Camera.main.ScreenToWorldPoint (Input.mousePosition); };
 		_mouseScrollDelta = delegate { return Input.mouseScrollDelta; };
+
+		_anyKey = delegate { return Input.anyKey; };
+		_anyKeyDown = delegate { return Input.anyKeyDown; };
 	}
 
 	private void SetInputFake()
@@ -223,6 +232,9 @@ public class InputReplay : MonoBehaviour {
 		_mousePosition = delegate { return currentSequence.mP; };
 		_mouseWorldPosition = delegate { return currentSequence.mWP; };
 		_mouseScrollDelta = delegate { return currentSequence.mSD; };
+
+		_anyKey = delegate { return currentSequence.gK.Any<KeyCode>(); };
+		_anyKeyDown = delegate { return currentSequence.gKD.Any<KeyCode>(); };
 	}
 
 	private void pause(float time)
