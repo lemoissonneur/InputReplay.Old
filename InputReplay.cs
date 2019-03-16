@@ -71,7 +71,7 @@ public class InputReplay : MonoBehaviour {
 
 	private delegate void Work(float time);
 	private Work work;
-	private float startTime = 0f;
+	private float startTime = 0.0f;
 
 
 
@@ -284,8 +284,7 @@ public class InputReplay : MonoBehaviour {
 			nextSequence.init ();
 			if (!ReadLine ())
 			{
-				active = false;
-				inputPlaybackStream.Close ();
+				Stop ();
 				Debug.Log ("InputPlayback: EndOfFile");
 			}
 		}
