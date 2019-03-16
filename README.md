@@ -27,7 +27,6 @@ InputReplay is a basic keyboard and mouse recorder and player for unity.
 * read the input from the InputReplay class with the following methods and var :
 ```csharp
 public bool GetKey(KeyCode code);
-public bool GetKey(KeyCode code);
 public bool GetKeyDown(KeyCode code);
 public bool GetKeyUp(KeyCode code);
 public bool GetMouseButton(int button);
@@ -39,5 +38,23 @@ public Vector3 mouseWorldPosition { get; }
 public Vector2 mouseScrollDelta { get; }
 ```
 
+# Example
+```csharp
+public class Test1 : MonoBehaviour {
 
+	InputReplay myInput;
+  
+	// Use this for initialization
+	void Start () {
+		myInput = GameObject.Find ("InputReplay").GetComponent<InputReplay> ();
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		if(myInput.GetKey (KeyCode.A))
+			Debug.Log('A');
+		
+	}
+}
+```
 
