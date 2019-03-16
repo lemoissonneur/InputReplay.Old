@@ -18,7 +18,7 @@ InputReplay is a basic keyboard and mouse recorder and player for unity.
 
 # How to use
 * add the InputReplay.cs script to and empty GameObject
-![parameter](https://previews.dropbox.com/p/thumb/AAXneT5oTptfoSqf3bCAx9XOQ0peVOffRaEFR0y-Vb__ppIsnKNS7IZeee-8q8KFa4YvdbAANlNVcCUrKnLgLfAxzQiPuSrwuoDWkAIc5512N8LvIZ6JsJXCF3fdqHhg526icgfdKsZU65qfCxCmPUjB-gM8vVR8EkO38ZT08yxwnj_lbjmXzH46UMx3iFB2KbMscWSDf6jDLccYzzWFAgon_N7tTWurSpyv31Ap4-lnoGRBdTcErrtDICrmUhaICguT5Y0x_tEvFBv4Y6REvJYk5ocFxAuEem5LDH_85zWcpA/p.png?size_mode=5)
+![parameter](https://github.com/lemoissonneur/InputReplay/blob/master/doc/InputReplay_param_github.PNG)
 ##### Record mode
 * activate it, select the mode (record), Update Cycle (Update or FixedUpdate) and file 
 * start the game and smash your keyboard !
@@ -26,13 +26,13 @@ InputReplay is a basic keyboard and mouse recorder and player for unity.
 * set the file path and player mode
 * read the input from the InputReplay class with the following methods and var :
 ```csharp
-public bool GetKey(KeyCode code)
-public bool GetKey(KeyCode code)
-public bool GetKeyDown(KeyCode code)
-public bool GetKeyUp(KeyCode code)
-public bool GetMouseButton(int button)
-public bool GetMouseButtonDown(int button)
-public bool GetMouseButtonUp(int button)
+public bool GetKey(KeyCode code);
+public bool GetKey(KeyCode code);
+public bool GetKeyDown(KeyCode code);
+public bool GetKeyUp(KeyCode code);
+public bool GetMouseButton(int button);
+public bool GetMouseButtonDown(int button);
+public bool GetMouseButtonUp(int button);
 
 public Vector3 mousePosition { get; }
 public Vector3 mouseWorldPosition { get; }
