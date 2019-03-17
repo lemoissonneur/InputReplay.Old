@@ -32,7 +32,7 @@
 					</div>
 				</div>
 				<div class="col-lg-2 col-md-3 col-xs-12 right">
-					<a class="btn" href="https://github.com/lemoissonneur/InputReplay">download now</a>
+					<a class="btn" href="https://github.com/lemoissonneur/InputReplay">GitHub Repo</a>
 				</div>
 			</div>
 		</div>
@@ -82,6 +82,7 @@
 								<li>Playback delay <3ms</li>
 								<li>Can start automatically or manually</li>
 								<li>Will act as a broker for <i>UnityEngine.Input</i> when in record mode or disabled</li>
+								<li>Output size (me spamming as much key as I can, as fast as I can) is approximately 400Ko/min</li>
 							</ul>
 						</div>
 						<div class="section-txt" id="references">
@@ -148,6 +149,10 @@
 								<tr style="background-color:rgb(245, 245, 245);">
 									<td><pre class="prettyprint">void Stop()</pre></td>
 									<td>Stop the recording or playback and close streams.</td>
+								</tr>
+								<tr style="background-color:rgb(255, 255, 255);">
+									<td><pre class="prettyprint_alt">void configure(Mode m, UpdateFunction c, string p))</pre></td>
+									<td>configure InputReplay.</td>
 								</tr>
 								<tr>
 									<th colspan="2" style="text-align:left;"><h5 id="references_configuration_properties" ></br>Configuration Properties</h5></th>
@@ -235,6 +240,7 @@
 			Debug.Log('A');
 
 		if (Time.time >= 2 && !recordStarted) {
+			muInput.configure();
 			myInput.StartRecord ();
 			recordStarted = true;
 		}
@@ -254,6 +260,7 @@
 							<ul>
 								<li>Made by <a href="https://github.com/lemoissonneur/">lemoissonneur</a></li>
 								<li>Documentation template from <a href="https://www.behance.net/valthemes"><i>Val Themes</i></a></li>
+								<li><a href="https://store.unity.com/">Get Unity software!</a></li>
 							</ul>
 						</div>
 					</div>

@@ -88,61 +88,28 @@ public class InputReplay : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
-		if (!active)	// if not active, switch to Input
+		if (!active)
 		{
 			SetInputStd ();
 			work = pause;
 			return;
 		}
-
-		switch (mode)
+		else
 		{
-		case Mode.Record:
-			oldSequence.init ();
-			currentSequence.init ();
-
-			inputRecordStream = new StreamWriter (FilePath, false);	// will overwrite new file Stream
-			if (inputRecordStream.ToString () == "")
-			{
-				Stop ();
-				Debug.Log ("InputReplay: StreamWriter(" + FilePath + "), file not found ?");
-			}
-			else
-			{
-				inputRecordStream.AutoFlush = true;
-				work = Record;
-				SetInputStd ();
-			}
-			break;
-
-		case Mode.PlayBack:
-			oldSequence.init ();
-			currentSequence.init ();
-			nextSequence.init ();
-
-			inputPlaybackStream = new StreamReader (FilePath, false);
-			if (inputPlaybackStream.ToString () == "")
-			{
-				Stop ();
-				Debug.Log ("InputReplay: StreamReader(" + FilePath + "), file not found ?");
-			}
-			else if (!ReadLine ()) // read the first line to check
-			{
-				Stop ();
-				Debug.Log ("InputReplay: empty file");
-			}
-			else
-			{
-				work = Play;
-				SetInputFake ();
-			}
-			break;
-		}
-
-		if (manualStart)
-		{
-			SetInputStd ();
 			work = pause;
+			configure (mode, UpdateCycle, FilePath);
+
+			if (!manualStart)
+			{
+				switch (mode) {
+				case Mode.Record:
+					StartRecord ();
+					break;
+				case Mode.PlayBack:
+					StartPlayBack ();
+					break;
+				}
+			}
 		}
 	}
 
@@ -168,6 +135,56 @@ public class InputReplay : MonoBehaviour {
 	/*
 	 * PUBLIC METHODS
 	 * */
+	public bool configure(Mode m, UpdateFunction c, string p)
+	{
+		UpdateCycle = c;
+		FilePath = p;
+		mode = m;
+
+		switch (mode)
+		{
+		case Mode.Record:
+			oldSequence.init ();
+			currentSequence.init ();
+
+			inputRecordStream = new StreamWriter (FilePath, false);	// will overwrite new file Stream
+			if (inputRecordStream.ToString () == "")
+			{
+				Stop ();
+				Debug.Log ("InputReplay: StreamWriter(" + FilePath + "), file not found ?");
+				return false;
+			}
+			else
+			{
+				inputRecordStream.AutoFlush = true;
+				SetInputStd ();
+			}
+			break;
+
+		case Mode.PlayBack:
+			oldSequence.init ();
+			currentSequence.init ();
+			nextSequence.init ();
+
+			inputPlaybackStream = new StreamReader (FilePath, false);
+			if (inputPlaybackStream.ToString () == "")
+			{
+				Stop ();
+				Debug.Log ("InputReplay: StreamReader(" + FilePath + "), file not found ?");
+				return false;
+			}
+			else if (!ReadLine ()) // read the first line to check
+			{
+				Stop ();
+				Debug.Log ("InputReplay: empty file");
+				return false;
+			}
+			break;
+		}
+
+		return true;
+	}
+
 	public void Stop()
 	{
 		active = false;
@@ -186,12 +203,15 @@ public class InputReplay : MonoBehaviour {
 
 	public void StartRecord()
 	{
+		active = true;
 		setStartTime ();
+		SetInputStd ();
 		work = Record;
 	}
 
 	public void StartPlayBack()
 	{
+		active = true;
 		setStartTime ();
 		SetInputFake ();
 		work = Play;
