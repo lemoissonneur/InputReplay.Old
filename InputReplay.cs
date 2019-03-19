@@ -14,6 +14,8 @@ public class InputReplay : MonoBehaviour {
 	public delegate bool AnyKeyType();
 	public delegate bool GetKeyType(KeyCode code);
 	public delegate bool GetMouseButtonType(int button);
+	public delegate bool GetButtonType(string name);
+	public delegate float GetAxisType(string name);
 	public delegate Vector3 Vector3Type();
 	public delegate Vector2 Vector2Type();
 
@@ -23,6 +25,9 @@ public class InputReplay : MonoBehaviour {
 	public UpdateFunction UpdateCycle = UpdateFunction.Update;
 	public string FilePath = "Temp/input.json";
 	public bool manualStart = false;
+	// virtual button and axis support
+	public List<string> AxisList = new List<string>();
+	public List<string> ButtonList = new List<string>();
 
 	// public methods and properties for input access
 	public GetKeyType GetKey;
@@ -31,6 +36,10 @@ public class InputReplay : MonoBehaviour {
 	public GetMouseButtonType GetMouseButton;
 	public GetMouseButtonType GetMouseButtonDown;
 	public GetMouseButtonType GetMouseButtonUp;
+	public GetButtonType GetButton;
+	public GetButtonType GetButtonDown;
+	public GetButtonType GetButtonUp;
+	public GetAxisType GetAxis;
 
 	private Vector3Type _mousePosition;
 	private Vector3Type _mouseWorldPosition;
@@ -55,6 +64,10 @@ public class InputReplay : MonoBehaviour {
 		public Vector3 mP;		// mousePosition
 		public Vector3 mWP;		// mouseWorldPosition
 		public Vector2 mSD;		// mouseScrollDelta
+		public List<string> vB;		// virtual Button
+		public List<string> vBD;	// virtual Button Down
+		public List<string> vBU;	// virtual Button Up
+		public List<float> vA;		// virtual Axis
 
 		public void init()
 		{
@@ -64,8 +77,11 @@ public class InputReplay : MonoBehaviour {
 			mP = new Vector3 ();
 			mWP = new Vector3 ();
 			mSD = new Vector2 ();
+			vB = new List<string> ();
+			vA = new List<float> ();
 		}
 	};
+
 
 	// Streams
 	private StreamReader inputPlaybackStream;
@@ -237,6 +253,11 @@ public class InputReplay : MonoBehaviour {
 		GetMouseButtonDown = Input.GetMouseButtonDown;
 		GetMouseButtonUp = Input.GetMouseButtonUp;
 
+		GetButton = Input.GetButton;
+		GetButtonDown = Input.GetButtonDown;
+		GetButtonUp = Input.GetButtonUp;
+		GetAxis = Input.GetAxis;
+
 		_mousePosition = delegate { return Input.mousePosition; };
 		_mouseWorldPosition = delegate { return Camera.main.ScreenToWorldPoint (Input.mousePosition); };
 		_mouseScrollDelta = delegate { return Input.mouseScrollDelta; };
@@ -253,6 +274,11 @@ public class InputReplay : MonoBehaviour {
 		GetMouseButton = FakeGetMouseButton;
 		GetMouseButtonDown = FakeGetMouseButtonDown;
 		GetMouseButtonUp = FakeGetMouseButtonUp;
+
+		GetButton = delegate (string name) { return currentSequence.vB.Contains (name); };
+		GetButtonDown = delegate (string name) { return currentSequence.vBD.Contains (name); };
+		GetButtonUp = delegate (string name) { return currentSequence.vBU.Contains (name); };
+		GetAxis = delegate (string name) { return currentSequence.vA.ElementAt (AxisList.FindIndex(str => str == name) ); };
 
 		_mousePosition = delegate { return currentSequence.mP; };
 		_mouseWorldPosition = delegate { return currentSequence.mWP; };
@@ -289,6 +315,13 @@ public class InputReplay : MonoBehaviour {
 		currentSequence.mWP = Camera.main.ScreenToWorldPoint (currentSequence.mP);
 
 		currentSequence.mSD = Input.mouseScrollDelta;
+
+		foreach (string virtualAxis in AxisList)
+			currentSequence.vA.Add (Input.GetAxis (virtualAxis));
+
+		foreach (string ButtonName in ButtonList)
+			if (Input.GetButton (ButtonName))
+				currentSequence.vB.Add (ButtonName);
 
 		// if nothing new, we dont write anything
 		if (AnyChange(oldSequence, currentSequence))
