@@ -322,8 +322,14 @@ public class InputReplay : MonoBehaviour {
 			currentSequence.vA.Add (Input.GetAxis (virtualAxis));
 
 		foreach (string ButtonName in ButtonList)
+		{
 			if (Input.GetButton (ButtonName))
 				currentSequence.vB.Add (ButtonName);
+			if (Input.GetButtonDown (ButtonName))
+				currentSequence.vBD.Add (ButtonName);
+			if (Input.GetButtonUp (ButtonName))
+				currentSequence.vBU.Add (ButtonName);
+		}
 
 		// if nothing new, we dont write anything
 		if (AnyChange(oldSequence, currentSequence))
