@@ -78,6 +78,8 @@ public class InputReplay : MonoBehaviour {
 			mWP = new Vector3 ();
 			mSD = new Vector2 ();
 			vB = new List<string> ();
+			vBD = new List<string> ();
+			vBU =  new List<string> ();
 			vA = new List<float> ();
 		}
 	};
