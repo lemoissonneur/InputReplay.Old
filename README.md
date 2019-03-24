@@ -18,13 +18,13 @@ InputReplay is a basic keyboard and mouse recorder and player for unity.
 
 # How to use
 * add the InputReplay.cs script to and empty GameObject
-![parameter](https://github.com/lemoissonneur/InputReplay/blob/master/doc/InputReplay_param_github.PNG)
+![parameter](https://github.com/lemoissonneur/InputReplay/blob/master/doc/images/InputReplay_param_github.PNG)
 ##### Record mode
 * activate it, select the mode (record), Update Cycle (Update or FixedUpdate) and file 
 * start the game and smash your keyboard !
 ##### Player mode
 * set the file path and player mode
-* read the input from the InputReplay class with the following methods and var :
+* read the input from the 'InputReplay' just like you would read from 'UnityEngine.Input' with the supported methods and properties :
 ```csharp
 public bool GetKey(KeyCode code);
 public bool GetKeyDown(KeyCode code);
@@ -32,13 +32,20 @@ public bool GetKeyUp(KeyCode code);
 public bool GetMouseButton(int button);
 public bool GetMouseButtonDown(int button);
 public bool GetMouseButtonUp(int button);
+public bool GetButton(string name);
+public bool GetButtonDown(string name);
+public bool GetButtonUp(string name);
+public float GetAxis(string name);
 
+public bool anyKey { get; }
+public bool anyKeyDown { get; }
 public Vector3 mousePosition { get; }
 public Vector3 mouseWorldPosition { get; }
 public Vector2 mouseScrollDelta { get; }
 ```
 
-# Example
+# Example :
+this code will work in both record and replay mode
 ```csharp
 public class Test1 : MonoBehaviour {
 

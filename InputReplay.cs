@@ -24,8 +24,8 @@ public class InputReplay : MonoBehaviour {
 	public Mode mode = Mode.Record;
 	public UpdateFunction UpdateCycle = UpdateFunction.Update;
 	public string FilePath = "Temp/input.json";
-	public bool manualStart = false;
-	// virtual button and axis support
+	public bool manualStart = false;			// if true, only configure at start and wait for start
+	// virtual button and axis support, list the InputManager's inputs you want to track
 	public List<string> AxisList = new List<string>();
 	public List<string> ButtonList = new List<string>();
 
@@ -84,7 +84,6 @@ public class InputReplay : MonoBehaviour {
 		}
 	};
 
-
 	// Streams
 	private StreamReader inputPlaybackStream;
 	private StreamWriter inputRecordStream;
@@ -106,18 +105,18 @@ public class InputReplay : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
-		if (!active)
+		if (!active)	// if not active, act as UnityEngine.Input
 		{
 			SetInputStd ();
 			work = pause;
 			return;
 		}
-		else
+		else		// else configure streams
 		{
 			work = pause;
 			configure (mode, UpdateCycle, FilePath);
 
-			if (!manualStart)
+			if (!manualStart)	// start now 
 			{
 				switch (mode) {
 				case Mode.Record:
@@ -205,9 +204,11 @@ public class InputReplay : MonoBehaviour {
 
 	public void Stop()
 	{
+		SetInputStd();	// switch back to direct inputs
+
 		active = false;
 
-		switch (mode) {
+		switch (mode) {	// close streams
 		case Mode.Record:
 			inputRecordStream.Close ();
 			break;
@@ -302,6 +303,7 @@ public class InputReplay : MonoBehaviour {
 		currentSequence.init ();
 		currentSequence.t = time;
 
+		// store only true boolean
 		foreach (KeyCode vkey in System.Enum.GetValues(typeof(KeyCode)))
 		{
 			if (Input.GetKey (vkey))
@@ -331,7 +333,7 @@ public class InputReplay : MonoBehaviour {
 				currentSequence.vBU.Add (ButtonName);
 		}
 
-		// if nothing new, we dont write anything
+		// only write if something changed
 		if (AnyChange(oldSequence, currentSequence))
 		{
 			//Debug.Log (JsonUtility.ToJson (newSequence));
@@ -340,9 +342,12 @@ public class InputReplay : MonoBehaviour {
 		}
 	}
 
+	// check if 
 	private bool AnyChange(InputSequence seqA, InputSequence seqB)
 	{
 		if(!Enumerable.SequenceEqual(seqA.gK, seqB.gK)) return true;
+		else if (!Enumerable.SequenceEqual(seqA.vB, seqB.vB)) return true;
+		else if (!Enumerable.SequenceEqual(seqA.vA, seqB.vA)) return true;
 		else if (seqA.mP != seqB.mP) return true;
 		else if (seqA.mWP != seqB.mWP) return true;
 		else if (seqA.mSD != seqB.mSD) return true;
@@ -368,7 +373,7 @@ public class InputReplay : MonoBehaviour {
 		}
 	}
 
-	private bool ReadLine()
+	private bool ReadLine()	// read a new line in file for the next sequence to play
 	{
 		string newline = inputPlaybackStream.ReadLine ();
 
